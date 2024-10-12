@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
 #include "Employee.generated.h"
+
+class USpringArmComponent;
+class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class LETHALCOMPANY_API AEmployee : public ACharacter
@@ -26,4 +32,23 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Move(const FInputActionValue& Value);
+
+	void Look(const FInputActionValue& Value);
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Components")
+	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> InputMappingContext;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Move;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Jump;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Look;
 };
