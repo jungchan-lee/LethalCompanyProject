@@ -51,4 +51,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> IA_Look;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> Gastank;
 };
