@@ -25,9 +25,21 @@ AEmployee::AEmployee()
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
+	Gastank = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gastank"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> GastankMesh(TEXT("/Game/Assets/Employee/Meshes/Gastank.Gastank"));
+	if (GastankMesh.Succeeded())
+	{
+		Gastank->SetStaticMesh(GastankMesh.Object);
+	}
+
+	Gastank->SetupAttachment(RootComponent);
+	Gastank->SetRelativeLocation(FVector(-26.5f, 0.16f, 59.0f));
+	Gastank->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
 	Camera->SetRelativeLocation(FVector(5.0f, 0.0f, 90.0f));
+	Camera->bUsePawnControlRotation = true;
 }
 
 // Called when the game starts or when spawned

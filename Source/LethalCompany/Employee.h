@@ -37,7 +37,7 @@ public:
 	void Look(const FInputActionValue& Value);
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Components")
 	TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
