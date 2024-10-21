@@ -9,6 +9,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
 
@@ -39,6 +40,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Components")
 	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(EditAnywhere, Category = "Components")
+	TObjectPtr<USpringArmComponent> SpringArm;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> InputMappingContext;

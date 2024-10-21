@@ -3,6 +3,8 @@
 
 #include "Employee.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -32,14 +34,18 @@ AEmployee::AEmployee()
 		Gastank->SetStaticMesh(GastankMesh.Object);
 	}
 
-	Gastank->SetupAttachment(RootComponent);
-	Gastank->SetRelativeLocation(FVector(-26.5f, 0.16f, 59.0f));
-	Gastank->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	Gastank->K2_AttachToComponent(GetMesh(), TEXT("gastank"),EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->TargetArmLength = -180.0f;
+	SpringArm->bUsePawnControlRotation = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(RootComponent);
-	Camera->SetRelativeLocation(FVector(5.0f, 0.0f, 90.0f));
-	Camera->bUsePawnControlRotation = true;
+	Camera->SetupAttachment(SpringArm);
+
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 // Called when the game starts or when spawned
@@ -49,7 +55,6 @@ void AEmployee::BeginPlay()
 
 	APlayerController* MyPlayerController = Cast<APlayerController>(GetController());
 
-	// 블루프린트로 만들어서 직접 넣을건지 c++에서 IMC 추가할건지 봐야함
 	if (IsValid(MyPlayerController))
 	{
 		ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(MyPlayerController->GetLocalPlayer());

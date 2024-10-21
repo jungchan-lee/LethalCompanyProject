@@ -9,6 +9,13 @@ AFlashlight::AFlashlight()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
+	SetRootComponent(Mesh);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FlashlightMesh(TEXT("/Game/Assets/Flashlight/Flashlight.Flashlight"));
+	if (FlashlightMesh.Succeeded())
+	{
+		Mesh->SetStaticMesh(FlashlightMesh.Object);
+	}
 }
 
 // Called when the game starts or when spawned
