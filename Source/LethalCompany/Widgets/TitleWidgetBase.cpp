@@ -5,37 +5,99 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "SocketSubsystem.h"
 #include "../LethalGameInstanceSubsystem.h"
 
 void UTitleWidgetBase::NativeConstruct()
 {
 	StartServerButton = Cast<UButton>(GetWidgetFromName(TEXT("StartServerBtn")));
-	ConnectButton = Cast<UButton>(GetWidgetFromName(TEXT("ConnectButton")));
-	//ServerIP = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("ServerIP")));
+	StartClientButton = Cast<UButton>(GetWidgetFromName(TEXT("StartClientBtn")));
+	QuitButton = Cast<UButton>(GetWidgetFromName(TEXT("QuitBtn")));
+	ServerIP = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("ServerIPBox")));
 	UserName = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("UserNameBox")));
+	ConfirmButton = Cast<UButton>(GetWidgetFromName(TEXT("ConfirmBtn")));
+	CancelButton = Cast<UButton>(GetWidgetFromName(TEXT("CancelBtn")));
 
 	if (StartServerButton)
 	{
-		StartServerButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ProcessStartServerButtonClick);
+		StartServerButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ShowStartServerUI);
+		//StartServerButton->OnHovered.AddDynamic(this, &UTitleWidgetBase::ProcessStartServerButtonClick);
 	}
 
-	if (ConnectButton)
+	if (StartClientButton)
 	{
-		ConnectButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ProcessConnectButtonClick);
+		StartClientButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ShowStartClientUI);
+	}
+
+	if (QuitButton)
+	{
+		QuitButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::QuitGame);
+	}
+
+	if (ConfirmButton)
+	{
+		ConfirmButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ProcessStartButton);
+	}
+
+	if (CancelButton)
+	{
+		CancelButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ShowStartMenuUI);
 	}
 }
 
-void UTitleWidgetBase::ProcessStartServerButtonClick()
+void UTitleWidgetBase::ProcessStartButton()
 {
-	//SaveUserName();
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("Lobby"), true, TEXT("listen"));
+	if (IsServer)
+	{
+		SaveUserName();
+		UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyLevel"), true, TEXT("listen"));
+	}
+	else if (!IsServer)
+	{
+		SaveUserName();
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*ServerIP->GetText().ToString()));
+	}
 }
 
-void UTitleWidgetBase::ProcessConnectButtonClick()
+void UTitleWidgetBase::ShowStartMenuUI()
 {
-	SaveUserName();
-	//UGameplayStatics::OpenLevel(GetWorld(), FName(*ServerIP->GetText().ToString()));
+	StartServerButton->SetVisibility(ESlateVisibility::Visible);
+	StartClientButton->SetVisibility(ESlateVisibility::Visible);
+	QuitButton->SetVisibility(ESlateVisibility::Visible);
+	ServerIP->SetVisibility(ESlateVisibility::Collapsed);
+	UserName->SetVisibility(ESlateVisibility::Collapsed);
+	ConfirmButton->SetVisibility(ESlateVisibility::Collapsed);
+	CancelButton->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UTitleWidgetBase::ShowStartServerUI()
+{
+	IsServer = true;
+	StartServerButton->SetVisibility(ESlateVisibility::Collapsed);
+	StartClientButton->SetVisibility(ESlateVisibility::Collapsed);
+	QuitButton->SetVisibility(ESlateVisibility::Collapsed);
+	//ServerIP->SetVisibility(ESlateVisibility::Visible);
+	UserName->SetVisibility(ESlateVisibility::Visible);
+	ConfirmButton->SetVisibility(ESlateVisibility::Visible);
+	CancelButton->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UTitleWidgetBase::ShowStartClientUI()
+{
+	IsServer = true;
+	StartServerButton->SetVisibility(ESlateVisibility::Collapsed);
+	StartClientButton->SetVisibility(ESlateVisibility::Collapsed);
+	QuitButton->SetVisibility(ESlateVisibility::Collapsed);
+	ServerIP->SetVisibility(ESlateVisibility::Visible);
+	UserName->SetVisibility(ESlateVisibility::Visible);
+	ConfirmButton->SetVisibility(ESlateVisibility::Visible);
+	CancelButton->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UTitleWidgetBase::QuitGame()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Type::Quit, false);
 }
 
 void UTitleWidgetBase::SaveUserName()

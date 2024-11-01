@@ -21,10 +21,19 @@ public:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
-	void ProcessStartServerButtonClick();
+	void ProcessStartButton();
 
 	UFUNCTION()
-	void ProcessConnectButtonClick();
+	void ShowStartMenuUI();
+
+	UFUNCTION()
+	void ShowStartServerUI();
+
+	UFUNCTION()
+	void ShowStartClientUI();
+
+	UFUNCTION()
+	void QuitGame();
 
 	void SaveUserName();
 
@@ -33,11 +42,22 @@ public:
 	TObjectPtr<UButton> StartServerButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<UButton> ConnectButton;
+	TObjectPtr<UButton> StartClientButton;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
-	//TObjectPtr<UEditableTextBox> ServerIP;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UButton> QuitButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UEditableTextBox> ServerIP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UEditableTextBox> UserName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UButton> ConfirmButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UButton> CancelButton;
+
+	bool IsServer = false;
 };
