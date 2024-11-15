@@ -2,6 +2,7 @@
 
 
 #include "Employee.h"
+#include "Flashlight.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -12,10 +13,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
-// Sets default values
 AEmployee::AEmployee()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> EmployeeMesh(TEXT("/Game/Assets/Employee/Meshes/SM_Employee.SM_Employee"));
@@ -48,7 +47,6 @@ AEmployee::AEmployee()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
-// Called when the game starts or when spawned
 void AEmployee::BeginPlay()
 {
 	Super::BeginPlay();
@@ -70,16 +68,17 @@ void AEmployee::BeginPlay()
 			}
 		}
 	}
+
+	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass(), GetActorTransform());
+	Flashlight->K2_AttachToComponent(GetMesh(), TEXT("flashlight"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 }
 
-// Called every frame
 void AEmployee::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -91,6 +90,8 @@ void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EIC->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AEmployee::Look);
 		EIC->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &AEmployee::Jump);
 		EIC->BindAction(IA_Jump, ETriggerEvent::Canceled, this, &AEmployee::StopJumping);
+		EIC->BindAction(IA_Flashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleFlashlight);
+		EIC->BindAction(IA_TurnFlashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleTurnFlashlight);
 	}
 
 }
@@ -116,4 +117,28 @@ void AEmployee::Look(const FInputActionValue& Value)
 {
 	AddControllerPitchInput(Value.Get<FVector2D>().Y);
 	AddControllerYawInput(Value.Get<FVector2D>().X);
+}
+
+void AEmployee::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+void AEmployee::ToggleFlashlight()
+{
+	if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(FlashlightAnimMontage))
+	{
+		StopAnimMontage(FlashlightAnimMontage);
+		Flashlight->ToggleLight();
+	}
+	else
+	{
+		PlayAnimMontage(FlashlightAnimMontage);
+		Flashlight->ToggleLight();
+	}
+}
+
+void AEmployee::ToggleTurnFlashlight()
+{
+	Flashlight->ToggleLight();
 }

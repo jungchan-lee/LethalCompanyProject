@@ -12,6 +12,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
+class AFlashlight;
 
 UCLASS()
 class LETHALCOMPANY_API AEmployee : public ACharacter
@@ -19,23 +20,28 @@ class LETHALCOMPANY_API AEmployee : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AEmployee();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void Move(const FInputActionValue& Value);
 
 	void Look(const FInputActionValue& Value);
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
+	UFUNCTION()
+	void ToggleFlashlight();
+
+	UFUNCTION()
+	void ToggleTurnFlashlight();
+
 
 public:
 	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Components")
@@ -56,6 +62,18 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> IA_Look;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Flashlight;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_TurnFlashlight;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> Gastank;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AFlashlight> Flashlight;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay")
+	TObjectPtr<UAnimMontage> FlashlightAnimMontage;
 };

@@ -2,6 +2,7 @@
 
 
 #include "Flashlight.h"
+#include "Components/SpotLightComponent.h"
 
 // Sets default values
 AFlashlight::AFlashlight()
@@ -16,6 +17,14 @@ AFlashlight::AFlashlight()
 	{
 		Mesh->SetStaticMesh(FlashlightMesh.Object);
 	}
+
+	Spotlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Spotlight"));
+	Spotlight->SetupAttachment(Mesh);
+	Spotlight->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+	Spotlight->SetRelativeLocation(FVector(0.0f, 10.5f, 4.0f));
+	Spotlight->AttenuationRadius = 1000.0f;
+	Spotlight->OuterConeAngle = 22.0f;
+	Spotlight->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +39,17 @@ void AFlashlight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AFlashlight::ToggleLight()
+{
+	if (Spotlight->IsVisible())
+	{
+		Spotlight->SetVisibility(false);
+	}
+	else
+	{
+		Spotlight->SetVisibility(true);
+	}
 }
 

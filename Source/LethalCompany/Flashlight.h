@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Flashlight.generated.h"
 
+class USpotLightComponent;
+
 UCLASS()
 class LETHALCOMPANY_API AFlashlight : public AActor
 {
@@ -23,7 +25,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void ToggleLight();
+
 public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USpotLightComponent> Spotlight;
 };
