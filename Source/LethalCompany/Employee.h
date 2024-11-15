@@ -13,6 +13,7 @@ class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
 class AFlashlight;
+class AShovel;
 
 UCLASS()
 class LETHALCOMPANY_API AEmployee : public ACharacter
@@ -42,6 +43,10 @@ public:
 	UFUNCTION()
 	void ToggleTurnFlashlight();
 
+	void ToggleShovel();
+
+	void PlayShovelAttack();
+
 
 public:
 	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Components")
@@ -68,6 +73,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> IA_TurnFlashlight;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Shovel;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_ShovelAttack;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> Gastank;
 
@@ -76,4 +87,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Gameplay")
 	TObjectPtr<UAnimMontage> FlashlightAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Gameplay")
+	TObjectPtr<UAnimMontage> ShovelAttackAnimMontage;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AShovel> Shovel;
+
+	UPROPERTY(EditAnywhere, BluePrintReadOnly)
+	bool IsShovel;
 };
