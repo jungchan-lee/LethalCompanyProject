@@ -35,16 +35,16 @@ public:
 
 	void Look(const FInputActionValue& Value);
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
-
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ToggleFlashlight();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ToggleTurnFlashlight();
 
+	UFUNCTION(BlueprintCallable)
 	void ToggleShovel();
 
+	UFUNCTION(BlueprintCallable)
 	void PlayShovelAttack();
 
 

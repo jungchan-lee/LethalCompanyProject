@@ -4,6 +4,7 @@
 #include "Employee.h"
 #include "Flashlight.h"
 #include "Shovel.h"
+#include "Net/UnrealNetwork.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -48,6 +49,8 @@ AEmployee::AEmployee()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	IsShovel = false;
+
+	bReplicates = true;
 }
 
 void AEmployee::BeginPlay()
@@ -72,11 +75,11 @@ void AEmployee::BeginPlay()
 		}
 	}
 
-	/*Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass(), GetActorTransform());
+	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass(), GetActorTransform());
 	Flashlight->K2_AttachToComponent(GetMesh(), TEXT("flashlight"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 
 	Shovel = GetWorld()->SpawnActor<AShovel>(AShovel::StaticClass(), GetActorTransform());
-	Shovel->K2_AttachToComponent(GetMesh(), TEXT("shovel"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);*/
+	Shovel->K2_AttachToComponent(GetMesh(), TEXT("shovel"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 }
 
 void AEmployee::Tick(float DeltaTime)
@@ -96,10 +99,10 @@ void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EIC->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AEmployee::Look);
 		EIC->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &AEmployee::Jump);
 		EIC->BindAction(IA_Jump, ETriggerEvent::Canceled, this, &AEmployee::StopJumping);
-		EIC->BindAction(IA_Flashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleFlashlight);
-		EIC->BindAction(IA_TurnFlashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleTurnFlashlight);
-		EIC->BindAction(IA_Shovel, ETriggerEvent::Completed, this, &AEmployee::ToggleShovel);
-		EIC->BindAction(IA_ShovelAttack, ETriggerEvent::Completed, this, &AEmployee::PlayShovelAttack);
+		//EIC->BindAction(IA_Flashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleFlashlight);
+		//IC->BindAction(IA_TurnFlashlight, ETriggerEvent::Completed, this, &AEmployee::ToggleTurnFlashlight);
+		//EIC->BindAction(IA_Shovel, ETriggerEvent::Completed, this, &AEmployee::ToggleShovel);
+		//EIC->BindAction(IA_ShovelAttack, ETriggerEvent::Completed, this, &AEmployee::PlayShovelAttack);
 	}
 
 }
@@ -125,11 +128,6 @@ void AEmployee::Look(const FInputActionValue& Value)
 {
 	AddControllerPitchInput(Value.Get<FVector2D>().Y);
 	AddControllerYawInput(Value.Get<FVector2D>().X);
-}
-
-void AEmployee::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
 void AEmployee::ToggleFlashlight()
