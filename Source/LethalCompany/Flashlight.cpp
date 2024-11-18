@@ -22,8 +22,8 @@ AFlashlight::AFlashlight()
 	Spotlight->SetupAttachment(Mesh);
 	Spotlight->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 	Spotlight->SetRelativeLocation(FVector(0.0f, 10.5f, 4.0f));
-	Spotlight->AttenuationRadius = 1000.0f;
-	Spotlight->OuterConeAngle = 22.0f;
+	Spotlight->AttenuationRadius = 2000.0f;
+	Spotlight->OuterConeAngle = 30.0f;
 	Spotlight->SetVisibility(false);
 }
 

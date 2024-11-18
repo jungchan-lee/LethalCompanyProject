@@ -3,6 +3,7 @@
 
 #include "LobbyWidgetBase.h"
 #include "../LobbyGameStateBase.h"
+#include "../LobbyGameStateBase.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
@@ -10,8 +11,8 @@
 
 void ULobbyWidgetBase::NativeConstruct()
 {
-	PlayerCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("PlayerCount")));
-	StartButton = Cast<UButton>(GetWidgetFromName(TEXT("StartButton")));
+	PlayerCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("PlayerCt")));
+	StartButton = Cast<UButton>(GetWidgetFromName(TEXT("StartBtn")));
 
 	if (StartButton)
 	{
@@ -25,9 +26,11 @@ void ULobbyWidgetBase::NativeConstruct()
 	}
 }
 
+
 void ULobbyWidgetBase::StartButtonClicked()
 {
-	GetWorld()->ServerTravel(TEXT("InGame"));
+	//GetWorld()->ServerTravel(TEXT("GameLevel_Hyunjun"));
+	GetWorld()->ServerTravel(TEXT("SH_ThirdPersonMap"));
 }
 
 void ULobbyWidgetBase::SetPlayerCount(uint32 NewPlayerCount)

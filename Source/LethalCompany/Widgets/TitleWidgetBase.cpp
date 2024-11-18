@@ -48,14 +48,28 @@ void UTitleWidgetBase::NativeConstruct()
 
 void UTitleWidgetBase::ProcessStartButton()
 {
+	//SaveUserName();
+
 	if (IsServer)
 	{
-		SaveUserName();
+		UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
+		ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
+		if (IsValid(LethalSubsystem))
+		{
+			LethalSubsystem->UserName = UserName->GetText().ToString();
+		}
+
 		UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyLevel"), true, TEXT("listen"));
 	}
 	else if (!IsServer)
 	{
-		SaveUserName();
+		UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
+		ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
+		if (IsValid(LethalSubsystem))
+		{
+			LethalSubsystem->UserName = UserName->GetText().ToString();
+		}
+
 		UGameplayStatics::OpenLevel(GetWorld(), FName(*ServerIP->GetText().ToString()));
 	}
 }
@@ -77,7 +91,6 @@ void UTitleWidgetBase::ShowStartServerUI()
 	StartServerButton->SetVisibility(ESlateVisibility::Collapsed);
 	StartClientButton->SetVisibility(ESlateVisibility::Collapsed);
 	QuitButton->SetVisibility(ESlateVisibility::Collapsed);
-	//ServerIP->SetVisibility(ESlateVisibility::Visible);
 	UserName->SetVisibility(ESlateVisibility::Visible);
 	ConfirmButton->SetVisibility(ESlateVisibility::Visible);
 	CancelButton->SetVisibility(ESlateVisibility::Visible);
@@ -85,7 +98,7 @@ void UTitleWidgetBase::ShowStartServerUI()
 
 void UTitleWidgetBase::ShowStartClientUI()
 {
-	IsServer = true;
+	IsServer = false;
 	StartServerButton->SetVisibility(ESlateVisibility::Collapsed);
 	StartClientButton->SetVisibility(ESlateVisibility::Collapsed);
 	QuitButton->SetVisibility(ESlateVisibility::Collapsed);
