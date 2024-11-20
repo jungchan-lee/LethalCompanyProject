@@ -13,5 +13,8 @@ UCLASS()
 class LETHALCOMPANY_API ALethalGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsIngame = true;
 };

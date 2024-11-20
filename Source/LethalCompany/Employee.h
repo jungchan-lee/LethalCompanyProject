@@ -36,6 +36,9 @@ public:
 	void Look(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintCallable)
+	void Dead();
+
+	UFUNCTION(BlueprintCallable)
 	void ToggleFlashlight();
 
 	UFUNCTION(BlueprintCallable)
@@ -96,4 +99,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BluePrintReadOnly)
 	bool IsShovel;
+
+	bool IsDead = false;
 };

@@ -22,6 +22,7 @@ void ULobbyWidgetBase::NativeConstruct()
 	ALobbyGameStateBase* LobbyGameState = Cast<ALobbyGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
 	if (IsValid(LobbyGameState))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Login"));
 		LobbyGameState->OnChangePlayerCount.AddDynamic(this, &ULobbyWidgetBase::SetPlayerCount);
 	}
 }
@@ -35,7 +36,21 @@ void ULobbyWidgetBase::StartButtonClicked()
 
 void ULobbyWidgetBase::SetPlayerCount(uint32 NewPlayerCount)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Login"));
+
 	FString Temp = FString::Printf(TEXT("%d Player"), NewPlayerCount);
 
 	PlayerCount->SetText(FText::FromString(Temp));
+}
+
+void ULobbyWidgetBase::ShowStartButton(bool IsServer)
+{
+	if (IsServer)
+	{
+		StartButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		StartButton->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }

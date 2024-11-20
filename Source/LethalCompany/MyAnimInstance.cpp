@@ -18,7 +18,6 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		GroundSpeed = Pawn->GetCharacterMovement()->Velocity.Size2D();
 		bShouldMove = (UKismetMathLibrary::NotEqual_VectorVector(Pawn->GetCharacterMovement()->GetCurrentAcceleration(), FVector::Zero(), 0.0f) && GroundSpeed > 3.0f);
 		bIsFalling = Pawn->GetCharacterMovement()->IsFalling();
-
 		Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Pawn->GetActorRotation());
 	}
 }

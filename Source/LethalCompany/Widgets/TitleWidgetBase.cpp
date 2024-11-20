@@ -22,7 +22,6 @@ void UTitleWidgetBase::NativeConstruct()
 	if (StartServerButton)
 	{
 		StartServerButton->OnClicked.AddDynamic(this, &UTitleWidgetBase::ShowStartServerUI);
-		//StartServerButton->OnHovered.AddDynamic(this, &UTitleWidgetBase::ProcessStartServerButtonClick);
 	}
 
 	if (StartClientButton)
@@ -48,27 +47,19 @@ void UTitleWidgetBase::NativeConstruct()
 
 void UTitleWidgetBase::ProcessStartButton()
 {
-	//SaveUserName();
+	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
+	ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
+	if (IsValid(LethalSubsystem))
+	{
+		LethalSubsystem->UserName = UserName->GetText().ToString();
+	}
 
 	if (IsServer)
 	{
-		UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
-		ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
-		if (IsValid(LethalSubsystem))
-		{
-			LethalSubsystem->UserName = UserName->GetText().ToString();
-		}
-
 		UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyLevel"), true, TEXT("listen"));
 	}
 	else if (!IsServer)
 	{
-		UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
-		ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
-		if (IsValid(LethalSubsystem))
-		{
-			LethalSubsystem->UserName = UserName->GetText().ToString();
-		}
 
 		UGameplayStatics::OpenLevel(GetWorld(), FName(*ServerIP->GetText().ToString()));
 	}
@@ -111,14 +102,4 @@ void UTitleWidgetBase::ShowStartClientUI()
 void UTitleWidgetBase::QuitGame()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Type::Quit, false);
-}
-
-void UTitleWidgetBase::SaveUserName()
-{
-	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
-	ULethalGameInstanceSubsystem* LethalSubsystem = GameInstance->GetSubsystem<ULethalGameInstanceSubsystem>();
-	if (IsValid(LethalSubsystem))
-	{
-		LethalSubsystem->UserName = UserName->GetText().ToString();
-	}
 }

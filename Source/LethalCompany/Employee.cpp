@@ -4,6 +4,7 @@
 #include "Employee.h"
 #include "Flashlight.h"
 #include "Shovel.h"
+#include "LethalPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -27,6 +28,8 @@ AEmployee::AEmployee()
 
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
+	GetMesh()->bOwnerNoSee = true;
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 
 	Gastank = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gastank"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> GastankMesh(TEXT("/Game/Assets/Employee/Meshes/Gastank.Gastank"));
@@ -36,6 +39,7 @@ AEmployee::AEmployee()
 	}
 
 	Gastank->K2_AttachToComponent(GetMesh(), TEXT("gastank"),EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+	Gastank->bOwnerNoSee = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -77,9 +81,11 @@ void AEmployee::BeginPlay()
 
 	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass(), GetActorTransform());
 	Flashlight->K2_AttachToComponent(GetMesh(), TEXT("flashlight"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+	Flashlight->Mesh->SetVisibility(false);
 
 	Shovel = GetWorld()->SpawnActor<AShovel>(AShovel::StaticClass(), GetActorTransform());
 	Shovel->K2_AttachToComponent(GetMesh(), TEXT("shovel"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+	Shovel->Mesh->SetVisibility(false);
 }
 
 void AEmployee::Tick(float DeltaTime)
@@ -109,6 +115,8 @@ void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEmployee::Move(const FInputActionValue& Value)
 {
+	if (IsDead) return;
+
 	FVector2D Temp = Value.Get<FVector2D>();
 	FVector Direction(FVector(Temp.Y, Temp.X, 0));
 	Direction.Normalize();
@@ -130,17 +138,25 @@ void AEmployee::Look(const FInputActionValue& Value)
 	AddControllerYawInput(Value.Get<FVector2D>().X);
 }
 
+void AEmployee::Dead()
+{
+	GetMesh()->SetSimulatePhysics(true);
+	IsDead = true;
+}
+
 void AEmployee::ToggleFlashlight()
 {
 	if (GetMesh()->GetAnimInstance()->Montage_IsPlaying(FlashlightAnimMontage))
 	{
 		StopAnimMontage(FlashlightAnimMontage);
 		Flashlight->ToggleLight();
+		Flashlight->Mesh->SetVisibility(false);
 	}
 	else
 	{
 		PlayAnimMontage(FlashlightAnimMontage);
 		Flashlight->ToggleLight();
+		Flashlight->Mesh->SetVisibility(true);
 	}
 }
 
@@ -151,6 +167,15 @@ void AEmployee::ToggleTurnFlashlight()
 
 void AEmployee::ToggleShovel()
 {
+	if (IsShovel)
+	{
+		Shovel->Mesh->SetVisibility(false);
+	}
+	else
+	{
+		Shovel->Mesh->SetVisibility(true);
+	}
+
 	IsShovel = !IsShovel;
 }
 

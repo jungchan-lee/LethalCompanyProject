@@ -4,18 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
-#include "LethalPlayerState.generated.h"
+#include "LobbyPlayerState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LETHALCOMPANY_API ALethalPlayerState : public APlayerState
+class LETHALCOMPANY_API ALobbyPlayerState : public APlayerState
 {
 	GENERATED_BODY()
-
-public:
-	bool IsDead = false;
-
-	int Hp = 100;
 };

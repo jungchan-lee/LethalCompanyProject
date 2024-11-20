@@ -23,6 +23,8 @@ public:
 	UFUNCTION()
 	void SetPlayerCount(uint32 NewPlayerCount);
 
+	void ShowStartButton(bool IsServer);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UTextBlock* PlayerCount;

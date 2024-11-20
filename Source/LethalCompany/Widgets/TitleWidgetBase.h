@@ -35,8 +35,6 @@ public:
 	UFUNCTION()
 	void QuitGame();
 
-	void SaveUserName();
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UButton> StartServerButton;
