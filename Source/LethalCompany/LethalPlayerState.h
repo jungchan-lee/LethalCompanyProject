@@ -15,6 +15,13 @@ class LETHALCOMPANY_API ALethalPlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void CalculateStamina(float DeltaTime);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float StaminaRatio = 100.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsHold = false;
 

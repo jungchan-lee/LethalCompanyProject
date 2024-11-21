@@ -121,7 +121,11 @@ void AEmployee::Move(const FInputActionValue& Value)
 {
 	ALethalPlayerState* LethalPlayerState = Cast<ALethalPlayerState>(GetPlayerState());
 
-	if (LethalPlayerState)
+	if (LethalPlayerState == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NULL"));
+	}
+	else if (LethalPlayerState)
 	{
 		if (LethalPlayerState->IsDead) 
 			return;
@@ -158,10 +162,13 @@ void AEmployee::ToggleRun()
 	{
 		if (LethalPlayerState->IsRun)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("300.0f"));
+
 			GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("600.0f"));
 			GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 		}
 
