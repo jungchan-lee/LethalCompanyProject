@@ -23,4 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsShovel = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsRun = false;
 };

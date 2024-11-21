@@ -15,6 +15,7 @@ class UInputAction;
 class AFlashlight;
 class AShovel;
 class UPhysicsHandleComponent;
+class UWidgetComponent;
 
 UCLASS()
 class LETHALCOMPANY_API AEmployee : public ACharacter
@@ -35,6 +36,8 @@ public:
 	void Move(const FInputActionValue& Value);
 
 	void Look(const FInputActionValue& Value);
+
+	void ToggleRun();
 
 	UFUNCTION(BlueprintCallable)
 	void Dead();
@@ -71,6 +74,9 @@ public:
 	TObjectPtr<UInputAction> IA_Look;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> IA_Run;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> IA_Flashlight;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -91,7 +97,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Gameplay")
 	TObjectPtr<UAnimMontage> FlashlightAnimMontage;
 
-	UPROPERTY(EditAnywhere, Category = "Gameplay")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	TObjectPtr<UAnimMontage> ShovelAttackAnimMontage;
 
 	UPROPERTY(EditAnywhere)
