@@ -15,7 +15,12 @@ class LETHALCOMPANY_API ALethalPlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsHold = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsDead = false;
 
-	int Hp = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsShovel = false;
 };

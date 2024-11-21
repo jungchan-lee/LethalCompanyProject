@@ -2,11 +2,12 @@
 
 
 #include "Employee.h"
+#include "LethalPlayerState.h"
 #include "Flashlight.h"
 #include "Shovel.h"
-#include "LethalPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/CapsuleComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -51,8 +52,7 @@ AEmployee::AEmployee()
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-	IsShovel = false;
+	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 
 	bReplicates = true;
 }
@@ -86,12 +86,12 @@ void AEmployee::BeginPlay()
 	Shovel = GetWorld()->SpawnActor<AShovel>(AShovel::StaticClass(), GetActorTransform());
 	Shovel->K2_AttachToComponent(GetMesh(), TEXT("shovel"), EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 	Shovel->Mesh->SetVisibility(false);
+
 }
 
 void AEmployee::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -115,7 +115,9 @@ void AEmployee::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEmployee::Move(const FInputActionValue& Value)
 {
-	if (IsDead) return;
+	ALethalPlayerState* LethalPlayerState = Cast<ALethalPlayerState>(GetPlayerState());
+
+	if (LethalPlayerState->IsDead) return;
 
 	FVector2D Temp = Value.Get<FVector2D>();
 	FVector Direction(FVector(Temp.Y, Temp.X, 0));
@@ -140,8 +142,13 @@ void AEmployee::Look(const FInputActionValue& Value)
 
 void AEmployee::Dead()
 {
-	GetMesh()->SetSimulatePhysics(true);
-	IsDead = true;
+	ALethalPlayerState* LethalPlayerState = Cast<ALethalPlayerState>(GetPlayerState());
+
+	if (LethalPlayerState)
+	{
+		GetMesh()->SetSimulatePhysics(true);
+		LethalPlayerState->IsDead = true;
+	}
 }
 
 void AEmployee::ToggleFlashlight()
@@ -167,7 +174,9 @@ void AEmployee::ToggleTurnFlashlight()
 
 void AEmployee::ToggleShovel()
 {
-	if (IsShovel)
+	ALethalPlayerState* LethalPlayerState = Cast<ALethalPlayerState>(GetPlayerState());
+	
+	if (LethalPlayerState->IsShovel)
 	{
 		Shovel->Mesh->SetVisibility(false);
 	}
@@ -176,10 +185,13 @@ void AEmployee::ToggleShovel()
 		Shovel->Mesh->SetVisibility(true);
 	}
 
-	IsShovel = !IsShovel;
+	LethalPlayerState->IsShovel = !LethalPlayerState->IsShovel;
 }
 
 void AEmployee::PlayShovelAttack()
 {
-	PlayAnimMontage(ShovelAttackAnimMontage);
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(ShovelAttackAnimMontage))
+	{
+		PlayAnimMontage(ShovelAttackAnimMontage);
+	}
 }

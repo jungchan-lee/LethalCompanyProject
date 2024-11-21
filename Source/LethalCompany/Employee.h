@@ -14,6 +14,7 @@ class UInputMappingContext;
 class UInputAction;
 class AFlashlight;
 class AShovel;
+class UPhysicsHandleComponent;
 
 UCLASS()
 class LETHALCOMPANY_API AEmployee : public ACharacter
@@ -49,7 +50,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayShovelAttack();
-
 
 public:
 	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Components")
@@ -96,9 +96,4 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AShovel> Shovel;
-
-	UPROPERTY(EditAnywhere, BluePrintReadOnly)
-	bool IsShovel;
-
-	bool IsDead = false;
 };
