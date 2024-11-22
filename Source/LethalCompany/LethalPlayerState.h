@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerState.h"
 #include "LethalPlayerState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FChangeStaminaRatio, ALethalPlayerState, OnChangeStaminaRatio, float, NewStaminaRatio);
+
 /**
  * 
  */
@@ -18,9 +20,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CalculateStamina(float DeltaTime);
 
+	UFUNCTION()
+	void OnRep_StaminaRatio();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", ReplicatedUsing = "OnRep_StaminaRatio")
 	float StaminaRatio = 100.0f;
+
+	UPROPERTY(BlueprintAssignable, Category = "Data")
+	FChangeStaminaRatio OnChangeStaminaRatio;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsHold = false;

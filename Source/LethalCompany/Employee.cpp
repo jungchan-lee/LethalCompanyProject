@@ -150,6 +150,16 @@ void AEmployee::Look(const FInputActionValue& Value)
 {
 	AddControllerPitchInput(Value.Get<FVector2D>().Y);
 	AddControllerYawInput(Value.Get<FVector2D>().X);
+
+	FRotator LookRotationZ = Camera->GetComponentRotation();
+
+	float TempRoll = 0.0f;
+	float TempPitch = 0.0f;
+	float TempYaw = 0.0f;
+
+	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
+
+	SetActorRotation(FRotator(0.0f, TempYaw, 0.0f));
 }
 
 void AEmployee::ToggleRun()

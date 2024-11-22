@@ -2,6 +2,8 @@
 
 
 #include "LethalPlayerState.h"
+#include "LethalPlayerController.h"
+#include "Net/UnrealNetwork.h"
 
 void ALethalPlayerState::CalculateStamina(float DeltaTime)
 {
@@ -30,4 +32,19 @@ void ALethalPlayerState::CalculateStamina(float DeltaTime)
 			UE_LOG(LogTemp, Warning, TEXT("%f"), StaminaRatio);
 		}
 	}
+}
+
+void ALethalPlayerState::OnRep_StaminaRatio()
+{
+	if (OnChangeStaminaRatio.IsBound())
+	{
+		OnChangeStaminaRatio.Broadcast((float)StaminaRatio);
+	}
+}
+
+void ALethalPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ALethalPlayerState, StaminaRatio);
 }
