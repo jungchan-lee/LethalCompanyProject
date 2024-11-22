@@ -33,13 +33,14 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
 	void Move(const FInputActionValue& Value);
 
-	UFUNCTION(BlueprintCallable)
 	void Look(const FInputActionValue& Value);
 
 	void ToggleRun();
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerRoation();
 
 	UFUNCTION(BlueprintCallable)
 	void Dead();

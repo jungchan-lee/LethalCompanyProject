@@ -146,32 +146,12 @@ void AEmployee::Move(const FInputActionValue& Value)
 
 	AddMovementInput(ForwardVectorXYPlaneBase * Temp.Y);
 	AddMovementInput(RightVectorXYPlaneBase * Temp.X);
-
-	FRotator LookRotationZ = Camera->GetComponentRotation();
-
-	float TempRoll = 0.0f;
-	float TempPitch = 0.0f;
-	float TempYaw = 0.0f;
-
-	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
-	//AddControllerYawInput(TempYaw);
 }
 
 void AEmployee::Look(const FInputActionValue& Value)
 {
 	AddControllerPitchInput(Value.Get<FVector2D>().Y);
 	AddControllerYawInput(Value.Get<FVector2D>().X);
-
-	FRotator LookRotationZ = Camera->GetComponentRotation();
-
-	float TempRoll = 0.0f;
-	float TempPitch = 0.0f;
-	float TempYaw = 0.0f;
-
-	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
-
-	//AddControllerYawInput(TempYaw);
-	SetActorRotation(FRotator(0.0f, TempYaw, 0.0f));
 }
 
 void AEmployee::ToggleRun()
@@ -196,6 +176,19 @@ void AEmployee::ToggleRun()
 
 		LethalPlayerState->IsRun = !LethalPlayerState->IsRun;
 	}
+}
+
+void AEmployee::SetPlayerRoation()
+{
+	FRotator LookRotationZ = Camera->GetComponentRotation();
+
+	float TempRoll = 0.0f;
+	float TempPitch = 0.0f;
+	float TempYaw = 0.0f;
+
+	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
+
+	SetActorRotation(FRotator(0.0f, TempYaw, 0.0f));
 }
 
 void AEmployee::Dead()
