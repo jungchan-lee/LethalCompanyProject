@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Shovel.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class LETHALCOMPANY_API AShovel : public AActor
 {
@@ -24,7 +26,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USphereComponent> HitCollision;
 };

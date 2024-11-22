@@ -2,6 +2,7 @@
 
 
 #include "Shovel.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AShovel::AShovel()
@@ -16,6 +17,11 @@ AShovel::AShovel()
 	{
 		Mesh->SetStaticMesh(ShovelMesh.Object);
 	}
+
+	HitCollision = CreateDefaultSubobject<USphereComponent>(TEXT("HitCollision"));
+	HitCollision->SetupAttachment(Mesh);
+	HitCollision->SetRelativeLocation(FVector(0.0f, 0.0f, -55.0f));
+	HitCollision->SetSphereRadius(24.0f);
 }
 
 // Called when the game starts or when spawned
