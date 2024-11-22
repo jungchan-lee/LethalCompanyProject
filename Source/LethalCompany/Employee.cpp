@@ -131,6 +131,8 @@ void AEmployee::Move(const FInputActionValue& Value)
 			return;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Move"));
+
 	FVector2D Temp = Value.Get<FVector2D>();
 	FVector Direction(FVector(Temp.Y, Temp.X, 0));
 	Direction.Normalize();
@@ -144,6 +146,15 @@ void AEmployee::Move(const FInputActionValue& Value)
 
 	AddMovementInput(ForwardVectorXYPlaneBase * Temp.Y);
 	AddMovementInput(RightVectorXYPlaneBase * Temp.X);
+
+	FRotator LookRotationZ = Camera->GetComponentRotation();
+
+	float TempRoll = 0.0f;
+	float TempPitch = 0.0f;
+	float TempYaw = 0.0f;
+
+	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
+	//AddControllerYawInput(TempYaw);
 }
 
 void AEmployee::Look(const FInputActionValue& Value)
@@ -159,6 +170,7 @@ void AEmployee::Look(const FInputActionValue& Value)
 
 	UKismetMathLibrary::BreakRotator(LookRotationZ, TempRoll, TempPitch, TempYaw);
 
+	//AddControllerYawInput(TempYaw);
 	SetActorRotation(FRotator(0.0f, TempYaw, 0.0f));
 }
 
